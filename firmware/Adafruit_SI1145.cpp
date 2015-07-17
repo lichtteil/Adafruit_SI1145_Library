@@ -91,7 +91,8 @@ void Adafruit_SI1145::reset() {
   write8(SI1145_REG_COMMAND, SI1145_RESET);
   delay(10);
   write8(SI1145_REG_HWKEY, 0x17);
-  
+  write8(SI1145_BUSADDR, 0x61);
+  _addr = 0x61;
   delay(10);
 }
 
