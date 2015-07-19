@@ -23,7 +23,7 @@ Adafruit_SI1145::Adafruit_SI1145() {
 }
 
 
-boolean Adafruit_SI1145::begin(void) {
+boolean Adafruit_SI1145::begin() {
     Wire.begin();
 
     uint8_t id = read8(SI1145_REG_PARTID);
@@ -65,9 +65,9 @@ boolean Adafruit_SI1145::begin(void) {
     // take 511 clocks to measure
     writeParam(SI1145_PARAM_ALSVISADCOUNTER, SI1145_PARAM_ADCCOUNTER_511CLK);
     // in high range mode (not normal signal)
-    writeParam(SI1145_PARAM_ALSVISADCMISC, SI1145_PARAM_ALSVISADCMISC_VISRANGE);
-
-
+    //writeParam(SI1145_PARAM_ALSVISADCMISC, SI1145_PARAM_ALSVISADCMISC_VISRANGE);
+    
+    
     /************************/
 
     // measurement rate for auto
@@ -83,6 +83,11 @@ boolean Adafruit_SI1145::begin(void) {
     return true;
 }
 
+boolean Adafruit_SI1145::begin(uint8_t addr) {
+    _addr = (uint8_t)addr;
+    return begin();
+}
+
 void Adafruit_SI1145::reset() {
     write8(SI1145_REG_MEASRATE0, 0);
     write8(SI1145_REG_MEASRATE1, 0);
@@ -91,8 +96,8 @@ void Adafruit_SI1145::reset() {
     write8(SI1145_REG_IRQMODE2, 0);
     write8(SI1145_REG_INTCFG, 0);
     write8(SI1145_REG_IRQSTAT, 0xFF);
-
-    write8(SI1145_REG_COMMAND, SI1145_RESET);
+    
+    //write8(SI1145_REG_COMMAND, SI1145_RESET); // Would reset new bus address
     delay(10);
 
     write8(SI1145_REG_HWKEY, 0x17);
@@ -173,7 +178,7 @@ void Adafruit_SI1145::write8(uint8_t reg, uint8_t val) {
 
 
 void Adafruit_SI1145::setBusAddress(uint8_t addr) {
-    write8( SI1145_REG_PARAMWR, addr );
+    write8( SI1145_REG_PARAMWR, (uint8_t)addr );
     write8( SI1145_REG_COMMAND, SI1145_PARAM_SET );  // PARAM_SET command (0xA0) OR'd with the I2C_ADDR PRAM address (0x00)
     write8( SI1145_REG_COMMAND, SI1145_BUSADDR );
     _addr = addr;

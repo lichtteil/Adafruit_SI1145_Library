@@ -140,6 +140,7 @@
 
 class Adafruit_SI1145  {
 public:
+    Adafruit_SI1145(uint8_t addr);
     Adafruit_SI1145(void);
     bool begin();
     void reset();
